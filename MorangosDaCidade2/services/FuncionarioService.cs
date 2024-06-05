@@ -21,13 +21,38 @@ namespace MorangosDaCidade.Service
 
         public List<Funcionario> ListarFuncionarios()
         {
-            List<Funcionario> funcionarios = new List<Funcionario>();
-            funcionarios = funcionarioRepository.ListarFuncionarios();
-            foreach (var item in funcionarios)
-            {
-                Console.WriteLine($"{item.Id} - {item.Nome}"); 
-            }
+            List<Funcionario> funcionarios = funcionarioRepository.ListarFuncionarios();
             return funcionarios;
+        }
+
+        public List<Funcionario> ListarFuncionariosPorNome(string nome)
+        {
+            List<Funcionario> funcionarios = funcionarioRepository.BuscarFuncionarioPorNome(nome);
+            return funcionarios;
+        }
+
+        public Funcionario BuscarFuncionarioPorId(int id)
+        {
+            Funcionario funcionario = funcionarioRepository.BuscarFuncionarioPorId(id);
+            return funcionario;
+        }
+
+        public bool AtualizarFuncionario(Funcionario f)
+        {
+            if (funcionarioRepository.AtualizarFuncionario(f) > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool DeletarFuncionario(int id)
+        {
+            if (funcionarioRepository.DeletarFuncionario(id) > 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

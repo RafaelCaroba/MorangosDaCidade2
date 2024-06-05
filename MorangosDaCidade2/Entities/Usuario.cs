@@ -22,6 +22,17 @@ namespace MorangosDaCidade.Entities
             Senha = senha;
         }
 
+        public Usuario(int id, string nome, string cpf, string email, string telefone, SqlDateTime dataNascimento, string senha)
+        {
+            Id = id;
+            Nome = nome;
+            Cpf = cpf;
+            Email = email;
+            Telefone = telefone;
+            DataNascimento = dataNascimento;
+            Senha = senha;
+        }
+
         public Usuario ()
         {
 
