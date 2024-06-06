@@ -25,7 +25,7 @@ namespace MorangosDaCidade.Controllers
                 Console.WriteLine("3 - Editar Registro de Clientes");
                 Console.WriteLine("4 - Deletar Clientes");
                 Console.WriteLine("0 - Voltar");
-                Console.Write("Esvolha uma opÁ„o: ");
+                Console.Write("Esvolha uma op√ß√£o: ");
                 string opDigitada = Console.ReadLine();
                 opcao = int.Parse(opDigitada);
 
@@ -111,7 +111,7 @@ namespace MorangosDaCidade.Controllers
             }
             else
             {
-                Console.WriteLine("N„o H· registros para serem mostrados.");
+                Console.WriteLine("N√£o H√° registros para serem mostrados.");
             }
             Console.WriteLine("Digite qualquer tecla para continuar...");
             Console.ReadKey();
@@ -135,7 +135,7 @@ namespace MorangosDaCidade.Controllers
             }
             else
             {
-                Console.WriteLine("N„o H· registros para serem mostrados.");
+                Console.WriteLine("N√£o H√° registros para serem mostrados.");
             }
             Console.WriteLine("Digite qualquer tecla para continuar...");
             Console.ReadKey();
@@ -148,12 +148,12 @@ namespace MorangosDaCidade.Controllers
             Console.WriteLine("Como prefere buscar o cliente desejado?");
             Console.WriteLine("1 - Buscar por Nome");
             Console.WriteLine("2 - Buscar na Lista");
-            Console.Write("Escolha uma opÁ„o: ");
+            Console.Write("Escolha uma op√ß√£o: ");
             int opcao = int.Parse(Console.ReadLine());
             while (opcao != 1 && opcao != 2)
             {
-                Console.WriteLine("OpÁ„o inv·lida");
-                Console.Write("Escolha uma opÁ„o: ");
+                Console.WriteLine("Op√ß√£o inv√°lida");
+                Console.Write("Escolha uma op√ß√£o: ");
                 opcao = int.Parse(Console.ReadLine());
             }
 
@@ -201,7 +201,7 @@ namespace MorangosDaCidade.Controllers
                 if (clienteService.AtualizarCliente(cliente))
                 {
                     string dataFormat = cliente.DataNascimento.ToString().Replace("00:00:00", "");
-                    Console.WriteLine("\nSucesso! Novo funcion·rio Cadastrado:");
+                    Console.WriteLine("\nSucesso! Novo funcion√°rio Cadastrado:");
                     Console.WriteLine($"Nome: {cliente.Nome}");
                     Console.WriteLine($"email: {cliente.Email}");
                     Console.WriteLine($"CPF: {cliente.Cpf}");
@@ -213,23 +213,23 @@ namespace MorangosDaCidade.Controllers
             }
             else
             {
-                Console.WriteLine("N„o h· nenhum funcion·rio com o id especificado.");
+                Console.WriteLine("N√£o h√° nenhum funcion√°rio com o id especificado.");
                 Console.ReadKey();
             }
         }
 
         public void DeletarCliente()
         {
-            ExibirTituloDaOpcao("DELETAR USU¡RIO");
+            ExibirTituloDaOpcao("DELETAR USU√ÅRIO");
             Console.WriteLine("Como prefere buscar o cliente desejado?");
             Console.WriteLine("1 - Buscar por Nome");
             Console.WriteLine("2 - Buscar na Lista");
-            Console.Write("Escolha uma opÁ„o: ");
+            Console.Write("Escolha uma op√ß√£o: ");
             int opcao = int.Parse(Console.ReadLine());
             while (opcao != 1 && opcao != 2)
             {
-                Console.WriteLine("OpÁ„o inv·lida");
-                Console.Write("Escolha uma opÁ„o: ");
+                Console.WriteLine("Op√ß√£o inv√°lida");
+                Console.Write("Escolha uma op√ß√£o: ");
                 opcao = int.Parse(Console.ReadLine());
             }
 
@@ -257,14 +257,14 @@ namespace MorangosDaCidade.Controllers
                 }
                 else
                 {
-                    Console.WriteLine("Houve um erro na deleÁ„o do cliente.");
+                    Console.WriteLine("Houve um erro na dele√ß√£o do cliente.");
                 }
                 Console.WriteLine("Pressione qualquer tecla para continuar...");
                 Console.ReadKey();
             }
             else
             {
-                Console.WriteLine("N„o h· nenhum cliente com o id especificado.");
+                Console.WriteLine("N√£o h√° nenhum cliente com o id especificado.");
                 Console.ReadKey();
             }
         }
