@@ -1,79 +1,223 @@
-﻿using System;
+﻿using MorangosDaCidade.Entities;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
 
 namespace MorangosDaCidade.Repository
 {
 
     class ClienteRepository
     {
-        public void InserirCliente()
+        string stringDeConexao = @"Data Source=VALTENCIR\SQLEXPRESS;Initial Catalog=MorangosDaCidade;Integrated Security=True";
+        public int CadastrarCliente(Cliente f)
         {
-            int IdUsuario = 2;
-            string NOME = "João";
-            string CPF = "99999999999";
-            string TELEFONE = "8888888888";
-            string EMAIL = "joão@gmail.com";
-            DateTime DataNascimento = new DateTime(2000, 10, 10);
-            string SENHA = "1234";
+            int resultado = 0;
 
-            //string query = "SELECT * FROM dbo.FazendaCadastrp";
-
-
-            string stringDeConexao = @"Data Source=VALTENCIR\SQLEXPRESS;Initial Catalog=MorangosDaCidade;Integrated Security=True";
-
-            string consulta = "INSERT INTO dbo.CLIENTE (IdUsuario, NOME,CPF,TELEFONE,EMAIL,DataNascimento,SENHA)" + " VALUES (@IdUsuario, @NOME, @CPF, @TELEFONE, @EMAIL, @DataNascimento, @SENHA)";
-            //primeiro é o nome exato da tabela e o segundo apelidos somente.
+            string consulta = "INSERT INTO dbo.CLIENTE (NOME,CPF,TELEFONE," +
+                "EMAIL,DataNascimento,SENHA)" +
+                " VALUES (@NOME, @CPF, @TELEFONE, @EMAIL, @DataNascimento, @SENHA)";
 
             using (SqlConnection conexao = new SqlConnection(stringDeConexao))
             {
                 SqlCommand comando = new SqlCommand(consulta, conexao);
-                comando.Parameters.AddWithValue("@IdUsuario", IdUsuario);
-                comando.Parameters.AddWithValue("@NOME", NOME);
-                comando.Parameters.AddWithValue("@CPF", CPF);
-                comando.Parameters.AddWithValue("@TELEFONE", TELEFONE);
-                comando.Parameters.AddWithValue("@EMAIL", EMAIL);
-                comando.Parameters.AddWithValue("@DataNascimento", DataNascimento);
-                comando.Parameters.AddWithValue("@SENHA", SENHA);
-                //conexao.Open();
+                comando.Parameters.AddWithValue("@NOME", f.Nome);
+                comando.Parameters.AddWithValue("@CPF", f.Cpf);
+                comando.Parameters.AddWithValue("@TELEFONE", f.Telefone);
+                comando.Parameters.AddWithValue("@EMAIL", f.Email);
+                comando.Parameters.AddWithValue("@DataNascimento", f.DataNascimento);
+                comando.Parameters.AddWithValue("@SENHA", f.Senha);
 
                 try
                 {
-                    // Abrindo a conexão com o banco de dados
                     conexao.Open();
 
-                    // Executando o comando SQL (INSERT)
-                    int resultado = comando.ExecuteNonQuery();
+                    resultado = comando.ExecuteNonQuery();
                     Console.WriteLine("Número de linhas afetadas: " + resultado);
                 }
-                catch (SqlException ex)
-                {
-                    // Tratando erros de SQL
-                    Console.WriteLine("Erro de SQL: " + ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    // Tratando outros erros
-                    Console.WriteLine("Erro: " + ex.Message);
-                }
+                catch (SqlException ex) { Console.WriteLine("Erro de SQL: " + ex.Message); }
+
+                catch (Exception ex) { Console.WriteLine("Erro: " + ex.Message); }
+
                 finally
                 {
                     // Garantindo que a conexão seja fechada
                     conexao.Close();
                 }
             }
+            return resultado;
+        }
 
-            // Mantendo o console aberto para visualizar os resultados
-            Console.ReadLine();
+        public List<Cliente> ListarClienteS()
+        {
+            using (SqlConnection connection = new SqlConnection(stringDeConexao))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT IdFunc, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE";
+                    SqlCommand comando = new SqlCommand(query, connection);
+                    List<Cliente> clientes = new List<Cliente>();
+                    SqlDataReader reader = comando.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Cliente f = new Cliente();
+                        f.Id = (int)reader["IdFunc"];
+                        f.Nome = (string)reader["NOME"];
+                        f.Cpf = (string)reader["CPF"];
+                        f.Email = (string)reader["EMAIL"];
+                        f.Telefone = (string)reader["TELEFONE"];
+                        SqlDateTime dtNascimento = reader.GetDateTime(reader.GetOrdinal("DataNascimento"));
+                        f.DataNascimento = dtNascimento;
+                        clientes.Add(f);
+                    }
+                    return clientes;
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("Erro de SQL: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro: " + ex.Message);
+                }
+            }
+            return null;
+        }
 
-            /*int resultado = comando.ExecuteNonQuery();
-                Console.WriteLine(resultado);
-                Console.ReadLine();*/
+        public List<Cliente> BuscarClientePorNome(string nome)
+        {
+            using (SqlConnection connection = new SqlConnection(stringDeConexao))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT IdFunc, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE" +
+                        " WHERE NOME LIKE @Nome";
+                    SqlCommand comando = new SqlCommand(query, connection);
+                    comando.Parameters.AddWithValue("@Nome", $"%{nome}%");
+                    List<Cliente> clientes = new List<Cliente>();
+                    SqlDataReader reader = comando.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Cliente f = new Cliente();
+                        f.Id = (int)reader["IdFunc"];
+                        f.Nome = (string)reader["NOME"];
+                        f.Cpf = (string)reader["CPF"];
+                        f.Email = (string)reader["EMAIL"];
+                        f.Telefone = (string)reader["TELEFONE"];
+                        SqlDateTime dtNascimento = reader.GetDateTime(reader.GetOrdinal("DataNascimento"));
+                        clientes.Add(f);
+                    }
+                    return clientes;
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("Erro de SQL: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro: " + ex.Message);
+                }
+            }
+            return null;
+        }
 
+        public Cliente BuscarClientePorId(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(stringDeConexao))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "SELECT IdFunc, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE" +
+                        " WHERE IdFunc = @Id";
+                    SqlCommand comando = new SqlCommand(query, connection);
+                    comando.Parameters.AddWithValue("@Id", id);
+                    SqlDataReader reader = comando.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        Cliente f = new Cliente();
+                        f.Id = (int)reader["IdFunc"];
+                        f.Nome = (string)reader["NOME"];
+                        f.Cpf = (string)reader["CPF"];
+                        f.Email = (string)reader["EMAIL"];
+                        f.Telefone = (string)reader["TELEFONE"];
+                        SqlDateTime dtNascimento = reader.GetDateTime(reader.GetOrdinal("DataNascimento"));
+                        connection.Close();
+                        return f;
+                    }
+
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine("Erro de SQL: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro: " + ex.Message);
+                }
+                connection.Close();
+            }
+            return null;
+        }
+        public int AtualizarCliente(Cliente cliente)
+        {
+            Console.WriteLine(cliente.Id);
+            int resultado = 0;
+            string query = "UPDATE dbo.CLIENTE SET Nome = @NovoNome, CPF = @NovoCPF, " +
+                    "Email = @NovoEmail, DataNascimento = @NovaDataNascimento, Senha = @NovaSenha WHERE IdFunc = @Id";
+
+            using (SqlConnection connection = new SqlConnection(stringDeConexao))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Id", cliente.Id);
+                command.Parameters.AddWithValue("@NovoNome", cliente.Nome);
+                command.Parameters.AddWithValue("@NovoCPF", cliente.Cpf);
+                command.Parameters.AddWithValue("@NovoEmail", cliente.Email);
+                command.Parameters.AddWithValue("@NovaDataNascimento", cliente.DataNascimento);
+                command.Parameters.AddWithValue("@NovaSenha", cliente.Senha);
+
+                try
+                {
+                    connection.Open();
+                    resultado = command.ExecuteNonQuery();
+                    Console.WriteLine("Número de linhas afetadas: " + resultado);
+                }
+                catch (SqlException ex) { Console.WriteLine("Erro de SQL: " + ex.Message); }
+
+                catch (Exception ex) { Console.WriteLine("Erro: " + ex.Message); }
+
+                finally
+                {
+                    connection.Close();
+                }
+            }
+            return resultado;
+        }
+
+        public int DeletarCliente(int id)
+        {
+            int resultado = 0;
+            using (SqlConnection connection = new SqlConnection(stringDeConexao))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = "DELETE FROM dbo.CLIENTE WHERE IdFunc = @Id";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@Id", id);
+                    resultado = command.ExecuteNonQuery();
+                    Console.WriteLine("Número de linhas afetadas: " + resultado);
+                }
+                catch (SqlException ex) { Console.WriteLine($"Erro de SQL: {ex.Message}"); }
+                catch (Exception ex) { Console.WriteLine($"Erro: {ex.Message}"); }
+            }
+            return resultado;
         }
 
     }
