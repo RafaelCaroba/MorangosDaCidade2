@@ -46,18 +46,26 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\FuncionarioController.cs" />
     <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Controllers\ProdutoController.cs" />
     <Compile Include="Controllers\SairController.cs" />
     <Compile Include="Entities\Administrador.cs" />
     <Compile Include="Entities\Cliente.cs" />
     <Compile Include="Entities\Funcionario.cs" />
+    <Compile Include="Entities\ItemPedido.cs" />
+    <Compile Include="Entities\Pedido.cs" />
+    <Compile Include="Entities\Produto.cs" />
+    <Compile Include="Entities\StatusPedido.cs" />
+    <Compile Include="Entities\TipoProduto.cs" />
     <Compile Include="Entities\Usuario.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="repositories\AdministradorRepository.cs" />
     <Compile Include="repositories\ClienteRepository.cs" />
     <Compile Include="repositories\FuncionarioRepository.cs" />
+    <Compile Include="repositories\ProdutoRepository.cs" />
     <Compile Include="services\AdminService.cs" />
     <Compile Include="services\FuncionarioService.cs" />
+    <Compile Include="services\ProdutoService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

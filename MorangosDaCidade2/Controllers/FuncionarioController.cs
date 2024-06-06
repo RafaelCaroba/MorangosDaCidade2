@@ -6,6 +6,7 @@ using MorangosDaCidade.Repository;
 using MorangosDaCidade.Service;
 using MorangosDaCidade2.Controllers;
 using System.Collections.Generic;
+using Microsoft.SqlServer.Server;
 
 namespace MorangosDaCidade.Controllers
 {
@@ -99,19 +100,18 @@ namespace MorangosDaCidade.Controllers
             List<Funcionario> funcionarios = funcionarioService.ListarFuncionarios();
 
             if (funcionarios.Count > 0) {
-                Console.WriteLine("Id - Nome - e-mail - CPF - Telefone - Dt. De Nascimento");
+                Console.WriteLine($"{"Id",-5} | {"Nome",-20} | {"e-mail",-30} | {"CPF",-15} | {"Telefone",-15} | {"Data Nasc.",-15}");
+                Console.WriteLine(new string('-', 115));
                 foreach (Funcionario f in funcionarios)
                 {
                     string cpfFormat = $"{f.Cpf.Substring(0, 3)}.{f.Cpf.Substring(3, 3)}.{f.Cpf.Substring(6, 3)}-{f.Cpf.Substring(9, 2)}";
                     string telefoneFormat = $"({f.Telefone.Substring(0, 2)}) {f.Telefone.Substring(2, 5)}-{f.Telefone.Substring(7, 4)}";
                     string dtFormat = f.DataNascimento.ToString().Replace("00:00:00", "");
-                    Console.WriteLine($"{f.Id} - {f.Nome.ToUpper()} - {f.Email} - {cpfFormat} - {telefoneFormat} - {dtFormat}");
+                    Console.WriteLine($"{f.Id,-5} | {f.Nome.ToUpper(),-20} | {f.Email,-30} | {cpfFormat,-15} " +
+                        $"| {telefoneFormat,-15} | {dtFormat,-15}");
                 }
-            } 
-            else
-            {
-                Console.WriteLine("Não Há registros para serem mostrados.");
             }
+            else Console.WriteLine("Não Há registros para serem mostrados.");
             Console.WriteLine("Digite qualquer tecla para continuar...");
             Console.ReadKey();
         }
@@ -123,13 +123,15 @@ namespace MorangosDaCidade.Controllers
             if (funcionarios.Count > 0)
             {
                 ExibirTituloDaOpcao("LISTA DE FUNCIONÁRIOS");
-                Console.WriteLine("Id - Nome - e-mail - CPF - Telefone - Dt. De Nascimento");
+                Console.WriteLine($"{"Id",-5} | {"Nome",-20} | {"e-mail",-30} | {"CPF",-15} | {"Telefone",-15} " +
+                    $"| {"Data Nasc.",-15}");
                 foreach (Funcionario f in funcionarios)
                 {
                     string cpfFormat = $"{f.Cpf.Substring(0, 3)}.{f.Cpf.Substring(3, 3)}.{f.Cpf.Substring(6, 3)}-{f.Cpf.Substring(9, 2)}";
                     string telefoneFormat = $"({f.Telefone.Substring(0, 2)}) {f.Telefone.Substring(2, 5)}-{f.Telefone.Substring(7, 4)}";
                     string dtFormat = f.DataNascimento.ToString().Replace("00:00:00", "");
-                    Console.WriteLine($"{f.Id} - {f.Nome.ToUpper()} - {f.Email} - {cpfFormat} - {telefoneFormat} - {dtFormat}");
+                    Console.WriteLine($"{f.Id,-5} | {f.Nome.ToUpper(),-20} | {f.Email,-30} | {cpfFormat,-15} " +
+                                           $"| {telefoneFormat,-15} | {dtFormat,-15}");
                 }
             }
             else
@@ -139,7 +141,6 @@ namespace MorangosDaCidade.Controllers
             Console.WriteLine("Digite qualquer tecla para continuar...");
             Console.ReadKey();
         }
-
 
         public void EditarFuncionario()
         {
