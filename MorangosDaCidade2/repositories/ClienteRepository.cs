@@ -13,7 +13,7 @@ namespace MorangosDaCidade.Repository
 
     class ClienteRepository
     {
-        string stringDeConexao = @"Data Source=VALTENCIR\SQLEXPRESS;Initial Catalog=MorangosDaCidade;Integrated Security=True";
+        string stringDeConexao = @"Data Source=LAPTOP-V1LI7TEI;Initial Catalog=MorangosDaCidade;Integrated Security=True";
         public int CadastrarCliente(Cliente f)
         {
             int resultado = 0;
@@ -52,21 +52,21 @@ namespace MorangosDaCidade.Repository
             return resultado;
         }
 
-        public List<Cliente> ListarClienteS()
+        public List<Cliente> ListarClientes()
         {
             using (SqlConnection connection = new SqlConnection(stringDeConexao))
             {
                 try
                 {
                     connection.Open();
-                    string query = "SELECT IdFunc, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE";
+                    string query = "SELECT IdCli, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE";
                     SqlCommand comando = new SqlCommand(query, connection);
                     List<Cliente> clientes = new List<Cliente>();
                     SqlDataReader reader = comando.ExecuteReader();
                     while (reader.Read())
                     {
                         Cliente f = new Cliente();
-                        f.Id = (int)reader["IdFunc"];
+                        f.Id = (int)reader["IdCli"];
                         f.Nome = (string)reader["NOME"];
                         f.Cpf = (string)reader["CPF"];
                         f.Email = (string)reader["EMAIL"];
@@ -96,7 +96,7 @@ namespace MorangosDaCidade.Repository
                 try
                 {
                     connection.Open();
-                    string query = "SELECT IdFunc, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE" +
+                    string query = "SELECT IdCli, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE" +
                         " WHERE NOME LIKE @Nome";
                     SqlCommand comando = new SqlCommand(query, connection);
                     comando.Parameters.AddWithValue("@Nome", $"%{nome}%");
@@ -134,15 +134,15 @@ namespace MorangosDaCidade.Repository
                 try
                 {
                     connection.Open();
-                    string query = "SELECT IdFunc, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE" +
-                        " WHERE IdFunc = @Id";
+                    string query = "SELECT IdCli, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE" +
+                        " WHERE IdCli = @Id";
                     SqlCommand comando = new SqlCommand(query, connection);
                     comando.Parameters.AddWithValue("@Id", id);
                     SqlDataReader reader = comando.ExecuteReader();
                     if (reader.Read())
                     {
                         Cliente f = new Cliente();
-                        f.Id = (int)reader["IdFunc"];
+                        f.Id = (int)reader["IdCli"];
                         f.Nome = (string)reader["NOME"];
                         f.Cpf = (string)reader["CPF"];
                         f.Email = (string)reader["EMAIL"];
@@ -170,7 +170,7 @@ namespace MorangosDaCidade.Repository
             Console.WriteLine(cliente.Id);
             int resultado = 0;
             string query = "UPDATE dbo.CLIENTE SET Nome = @NovoNome, CPF = @NovoCPF, " +
-                    "Email = @NovoEmail, DataNascimento = @NovaDataNascimento, Senha = @NovaSenha WHERE IdFunc = @Id";
+                    "Email = @NovoEmail, DataNascimento = @NovaDataNascimento, Senha = @NovaSenha WHERE IdCli = @Id";
 
             using (SqlConnection connection = new SqlConnection(stringDeConexao))
             {
@@ -208,7 +208,7 @@ namespace MorangosDaCidade.Repository
                 try
                 {
                     connection.Open();
-                    string query = "DELETE FROM dbo.CLIENTE WHERE IdFunc = @Id";
+                    string query = "DELETE FROM dbo.CLIENTE WHERE IdCli = @Id";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Id", id);
                     resultado = command.ExecuteNonQuery();

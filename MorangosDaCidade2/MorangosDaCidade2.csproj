@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\ClienteContoller.cs" />
+    <Compile Include="Controllers\ClienteController.cs" />
     <Compile Include="Controllers\FuncionarioController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\PedidoController.cs" />
@@ -67,6 +67,7 @@
     <Compile Include="repositories\PedidoRepository.cs" />
     <Compile Include="repositories\ProdutoRepository.cs" />
     <Compile Include="services\AdminService.cs" />
+    <Compile Include="services\ClienteService.cs" />
     <Compile Include="services\FuncionarioService.cs" />
     <Compile Include="services\PedidoService.cs" />
     <Compile Include="services\ProdutoService.cs" />

@@ -22,7 +22,7 @@ namespace MorangosDaCidade2.repositories
                         command.CommandText = "INSERT INTO Pedido (Usuario, DataPedido, StatusPedido) OUTPUT INSERTED.Id VALUES" +
                             " (@Usuario, @DataPedido, @StatusPedido)";
 
-                        command.Parameters.AddWithValue("@Usuario", pedido.Usuario);
+                        command.Parameters.AddWithValue("@Usuario", pedido.Cliente);
                         command.Parameters.AddWithValue("@DataPedido", pedido.DataPedido);
                         command.Parameters.AddWithValue("@StatusPedido", pedido.StatusPedido);
 

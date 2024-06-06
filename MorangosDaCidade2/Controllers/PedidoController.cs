@@ -1,5 +1,6 @@
 ﻿using MorangosDaCidade.Controllers;
 using MorangosDaCidade.Entities;
+using MorangosDaCidade.Service;
 using MorangosDaCidade2.Entities;
 using MorangosDaCidade2.services;
 using System;
@@ -15,9 +16,10 @@ namespace MorangosDaCidade2.Controllers
     internal class PedidoController : Controller
     {
         public PedidoService pedidoService = new PedidoService();
+        public ClienteService clienteService = new ClienteService();
         public ProdutoController produtoController = new ProdutoController();
         public FuncionarioController funcionarioController = new FuncionarioController();
-        public ClienteContoller clienteContoller = new ClienteContoller();
+        public ClienteController clienteController = new ClienteController();
 
         public override void Executar()
         {
@@ -80,18 +82,19 @@ namespace MorangosDaCidade2.Controllers
                     funcionarioController.ListarFuncionariosPorNome(nome);
                     Console.Write("\nDigite o Id do cliente: ");
                     int id = int.Parse(Console.ReadLine());
-                    //cliente = clienteController.BuscarClientePorId(id);  
+                    cliente = clienteService.BuscarClientePorId(id);  
                     break;
 
                 case 2:
                     funcionarioController.ListarFuncionarios();
                     Console.Write("\nDigite o Id do cliente: ");
                     id = int.Parse(Console.ReadLine());
-                    //cliente = clienteController.BuscarClientePorId(id);
+                    cliente = clienteService.BuscarClientePorId(id);
                     break;
 
                 case 3:
-                    //cliente = CadastrarCliente() 
+                    cliente = clienteController.FormularioDeCliente();
+                    clienteService.SalvarCliente(cliente);
                     break;
             }
             Console.WriteLine("Cliente adicionado ao pedido.");
@@ -99,20 +102,33 @@ namespace MorangosDaCidade2.Controllers
             Console.Clear();
 
             List<ItemPedido> carrinho = new List<ItemPedido>();
+
             Console.Write("Como deseja selecionar o produto?: ");
             Console.WriteLine("1 - Buscar por Nome");
             Console.WriteLine("2 - Buscar na Lista");
             Console.Write("Escolha uma opção: ");
             opcao = int.Parse(Console.ReadLine());
-            while (opcao < 1 && opcao > 3)
+            while (opcao < 1 && opcao > 2)
             {
                 Console.WriteLine("Opção inválida");
                 Console.Write("Escolha uma opção: ");
                 opcao = int.Parse(Console.ReadLine());
             }
-            produtoController.ListarProdutos();
+            switch (opcao)
+            {
+                case 1:
+                    Console.Write("Digite o nome do produto: ");
+                    string nome = Console.ReadLine();
+                    produtoController.ListarProdutosPorNome(nome);
+                    break;
 
-            
+                case 2:
+                    produtoController.ListarProdutos();
+                    break;
+            }
+            Console.Write("Digite o Id do produto: ");
+
+
             Pedido pedido = new Pedido(cliente, Status.Aberto, null);
             return pedido;
         }

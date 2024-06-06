@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Threading;
 using System.Data.SqlTypes;
 using MorangosDaCidade.Entities;
@@ -25,7 +25,7 @@ namespace MorangosDaCidade.Controllers
                 Console.WriteLine("3 - Editar Registro de Clientes");
                 Console.WriteLine("4 - Deletar Clientes");
                 Console.WriteLine("0 - Voltar");
-                Console.Write("Esvolha uma opÁ„o: ");
+                Console.Write("Esvolha uma op√ß√£o: ");
                 string opDigitada = Console.ReadLine();
                 opcao = int.Parse(opDigitada);
 
@@ -54,7 +54,8 @@ namespace MorangosDaCidade.Controllers
 
             }
         }
-        public void CadastrarCliente()
+
+        public Cliente FormularioDeCliente()
         {
             ExibirTituloDaOpcao("CADASTRO DE CLIENTE");
             Console.Write("Insira o nome do cliente: ");
@@ -77,6 +78,11 @@ namespace MorangosDaCidade.Controllers
                 senha2 = Console.ReadLine();
             }
             Cliente cliente = new Cliente(nome, cpf, email, telefone, dtConvertida, senha1);
+            return cliente;
+        }
+        public void CadastrarCliente()
+        {
+            Cliente cliente = FormularioDeCliente();
 
             if (clienteService.SalvarCliente(cliente))
             {
@@ -100,18 +106,20 @@ namespace MorangosDaCidade.Controllers
 
             if (clientes.Count > 0)
             {
-                Console.WriteLine("Id - Nome - e-mail - CPF - Telefone - Dt. De Nascimento");
+                Console.WriteLine($"{"Id",-5} | {"Nome",-20} | {"e-mail",-30} | {"CPF",-15} | {"Telefone",-15} |" +
+                    $" {"Data Nasc.",-15}");
                 foreach (Cliente f in clientes)
                 {
                     string cpfFormat = $"{f.Cpf.Substring(0, 3)}.{f.Cpf.Substring(3, 3)}.{f.Cpf.Substring(6, 3)}-{f.Cpf.Substring(9, 2)}";
                     string telefoneFormat = $"({f.Telefone.Substring(0, 2)}) {f.Telefone.Substring(2, 5)}-{f.Telefone.Substring(7, 4)}";
                     string dtFormat = f.DataNascimento.ToString().Replace("00:00:00", "");
-                    Console.WriteLine($"{f.Id} - {f.Nome.ToUpper()} - {f.Email} - {cpfFormat} - {telefoneFormat} - {dtFormat}");
+                    Console.WriteLine($"{f.Id,-5} | {f.Nome.ToUpper(),-20} | {f.Email,-30} | {cpfFormat,-15} " +
+                                            $"| {telefoneFormat,-15} | {dtFormat,-15}");
                 }
             }
             else
             {
-                Console.WriteLine("N„o H· registros para serem mostrados.");
+                Console.WriteLine("N√£o H√° registros para serem mostrados.");
             }
             Console.WriteLine("Digite qualquer tecla para continuar...");
             Console.ReadKey();
@@ -124,18 +132,20 @@ namespace MorangosDaCidade.Controllers
             if (clientes.Count > 0)
             {
                 ExibirTituloDaOpcao("LISTA DE CLIENTES");
-                Console.WriteLine("Id - Nome - e-mail - CPF - Telefone - Dt. De Nascimento");
+                Console.WriteLine($"{"Id",-5} | {"Nome",-20} | {"e-mail",-30} | {"CPF",-15} | {"Telefone",-15} |" +
+                    $" {"Data Nasc.",-15}");
                 foreach (Cliente f in clientes)
                 {
                     string cpfFormat = $"{f.Cpf.Substring(0, 3)}.{f.Cpf.Substring(3, 3)}.{f.Cpf.Substring(6, 3)}-{f.Cpf.Substring(9, 2)}";
                     string telefoneFormat = $"({f.Telefone.Substring(0, 2)}) {f.Telefone.Substring(2, 5)}-{f.Telefone.Substring(7, 4)}";
                     string dtFormat = f.DataNascimento.ToString().Replace("00:00:00", "");
-                    Console.WriteLine($"{f.Id} - {f.Nome.ToUpper()} - {f.Email} - {cpfFormat} - {telefoneFormat} - {dtFormat}");
+                    Console.WriteLine($"{f.Id,-5} | {f.Nome.ToUpper(),-20} | {f.Email,-30} | {cpfFormat,-15} " +
+                                            $"| {telefoneFormat,-15} | {dtFormat,-15}");
                 }
             }
             else
             {
-                Console.WriteLine("N„o H· registros para serem mostrados.");
+                Console.WriteLine("N√£o H√° registros para serem mostrados.");
             }
             Console.WriteLine("Digite qualquer tecla para continuar...");
             Console.ReadKey();
@@ -148,12 +158,12 @@ namespace MorangosDaCidade.Controllers
             Console.WriteLine("Como prefere buscar o cliente desejado?");
             Console.WriteLine("1 - Buscar por Nome");
             Console.WriteLine("2 - Buscar na Lista");
-            Console.Write("Escolha uma opÁ„o: ");
+            Console.Write("Escolha uma op√ß√£o: ");
             int opcao = int.Parse(Console.ReadLine());
             while (opcao != 1 && opcao != 2)
             {
-                Console.WriteLine("OpÁ„o inv·lida");
-                Console.Write("Escolha uma opÁ„o: ");
+                Console.WriteLine("Op√ß√£o inv√°lida");
+                Console.Write("Escolha uma op√ß√£o: ");
                 opcao = int.Parse(Console.ReadLine());
             }
 
@@ -173,7 +183,7 @@ namespace MorangosDaCidade.Controllers
             Console.Write("\nDigite o Id do cliente: ");
             int id = int.Parse(Console.ReadLine());
             Cliente cliente = clienteService.BuscarClientePorId(id);
-            if (funcionario != null)
+            if (cliente != null)
             {
                 Console.Write("Insira o nome do cliente: ");
                 String nomeDigitado = Console.ReadLine();
@@ -201,7 +211,7 @@ namespace MorangosDaCidade.Controllers
                 if (clienteService.AtualizarCliente(cliente))
                 {
                     string dataFormat = cliente.DataNascimento.ToString().Replace("00:00:00", "");
-                    Console.WriteLine("\nSucesso! Novo cliente Cadastrado:");
+                    Console.WriteLine("\nSucesso! Novo funcion√°rio Cadastrado:");
                     Console.WriteLine($"Nome: {cliente.Nome}");
                     Console.WriteLine($"email: {cliente.Email}");
                     Console.WriteLine($"CPF: {cliente.Cpf}");
@@ -213,23 +223,23 @@ namespace MorangosDaCidade.Controllers
             }
             else
             {
-                Console.WriteLine("N„o h· nenhum funcion·rio com o id especificado.");
+                Console.WriteLine("N√£o h√° nenhum funcion√°rio com o id especificado.");
                 Console.ReadKey();
             }
         }
 
         public void DeletarCliente()
         {
-            ExibirTituloDaOpcao("DELETAR USU¡RIO");
+            ExibirTituloDaOpcao("DELETAR USU√ÅRIO");
             Console.WriteLine("Como prefere buscar o cliente desejado?");
             Console.WriteLine("1 - Buscar por Nome");
             Console.WriteLine("2 - Buscar na Lista");
-            Console.Write("Escolha uma opÁ„o: ");
+            Console.Write("Escolha uma op√ß√£o: ");
             int opcao = int.Parse(Console.ReadLine());
             while (opcao != 1 && opcao != 2)
             {
-                Console.WriteLine("OpÁ„o inv·lida");
-                Console.Write("Escolha uma opÁ„o: ");
+                Console.WriteLine("Op√ß√£o inv√°lida");
+                Console.Write("Escolha uma op√ß√£o: ");
                 opcao = int.Parse(Console.ReadLine());
             }
 
@@ -257,14 +267,14 @@ namespace MorangosDaCidade.Controllers
                 }
                 else
                 {
-                    Console.WriteLine("Houve um erro na deleÁ„o do cliente.");
+                    Console.WriteLine("Houve um erro na dele√ß√£o do cliente.");
                 }
                 Console.WriteLine("Pressione qualquer tecla para continuar...");
                 Console.ReadKey();
             }
             else
             {
-                Console.WriteLine("N„o h· nenhum cliente com o id especificado.");
+                Console.WriteLine("N√£o h√° nenhum cliente com o id especificado.");
                 Console.ReadKey();
             }
         }
