@@ -201,7 +201,7 @@ namespace MorangosDaCidade.Controllers
                 if (clienteService.AtualizarCliente(cliente))
                 {
                     string dataFormat = cliente.DataNascimento.ToString().Replace("00:00:00", "");
-                    Console.WriteLine("\nSucesso! Novo funcionário Cadastrado:");
+                    Console.WriteLine("\nSucesso! Novo cliente Cadastrado:");
                     Console.WriteLine($"Nome: {cliente.Nome}");
                     Console.WriteLine($"email: {cliente.Email}");
                     Console.WriteLine($"CPF: {cliente.Cpf}");
