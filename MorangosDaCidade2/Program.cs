@@ -31,6 +31,7 @@ namespace BancoMorangosDaCidade
         {
             Dictionary<int, Controller> opcoes = new Dictionary<int, Controller>();
             opcoes.Add(1, new FuncionarioController());
+            opcoes.Add(3, new ClienteController());
             opcoes.Add(-1, new SairController());
 
             int opcao = 0;
