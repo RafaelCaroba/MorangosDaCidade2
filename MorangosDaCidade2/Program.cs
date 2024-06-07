@@ -13,9 +13,9 @@ namespace BancoMorangosDaCidade
     internal class Program
     {
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            ExibirOpcoesDoMenu();
+            await ExibirOpcoesDoMenuAsync();
         }
 
         public static void Login()
@@ -27,7 +27,7 @@ namespace BancoMorangosDaCidade
             String senha = Console.ReadLine();
         }
 
-        public static void ExibirOpcoesDoMenu()
+        public static async Task ExibirOpcoesDoMenuAsync()
         {
             Dictionary<int, Controller> opcoes = new Dictionary<int, Controller>();
             opcoes.Add(1, new FuncionarioController());
@@ -51,8 +51,8 @@ namespace BancoMorangosDaCidade
                 if (opcoes.ContainsKey(opcao))
                 {
                     Controller menu = opcoes[opcao];
-                    menu.Executar();
-                    if (opcao > 0) ExibirOpcoesDoMenu();
+                    await menu.ExecutarAsync();
+                    if (opcao > 0) await ExibirOpcoesDoMenuAsync();
                 }
             }
             

@@ -6,6 +6,8 @@ using MorangosDaCidade2.services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace MorangosDaCidade2.Controllers
@@ -14,13 +16,13 @@ namespace MorangosDaCidade2.Controllers
     {
         public static ProdutoService produtoService = new ProdutoService();
 
-        public override void Executar()
+        public override async Task ExecutarAsync()
         {
             int opcao = -1;
 
             while (opcao != 0)
             {
-                base.Executar();
+                base.ExecutarAsync();
                 ExibirTituloDaOpcao("MENU DE FUNCIONÁRIO");
                 Console.WriteLine("1 - Cadastrar Novo Produto");
                 Console.WriteLine("2 - Listar Produtos");
@@ -34,19 +36,23 @@ namespace MorangosDaCidade2.Controllers
                 {
                     case 1:
                         Console.Clear();
-                        CadastrarProduto();
+                        await CadastrarProdutoAsync();
                         break;
                     case 2:
                         Console.Clear();
-                        ListarProdutos();
+                        await ListarProdutosAsync();
+                        Console.WriteLine("Digite qualquer tecla para continuar...");
+                        Console.ReadKey();
                         break;
                     case 3:
                         Console.Clear();
-                        EditarProduto();
+                        await EditarProdutoAsync();
                         break;
                     case 4:
                         Console.Clear();
-                        DeletarProduto();
+                        await DeletarProdutoAsync();
+                        Console.WriteLine("Digite qualquer tecla para continuar...");
+                        Console.ReadKey();
                         break;
                     case 0:
                         Console.Clear();
@@ -64,8 +70,15 @@ namespace MorangosDaCidade2.Controllers
             Console.Write("Insira a quantidade atual do produto: ");
             int qtd = int.Parse(Console.ReadLine());
             Console.Write("O produto está disponível? (1 - Sim | 2 - Não): ");
+            int disp = int.Parse(Console.ReadLine());
             bool disponivel;
-            if (Console.ReadLine().Equals("Sim")) disponivel = true; else disponivel = false;
+            while (disp < 1 || disp > 2)
+            {
+                Console.WriteLine("Opção inválida");
+                Console.Write("Escolha uma opção: ");
+                disp = int.Parse(Console.ReadLine());
+            }
+            if (disp == 1) disponivel = true; else disponivel = false;
             Console.Write("Insira o valor unitário do produto: ");
             double valor = double.Parse(Console.ReadLine());
 
@@ -73,11 +86,11 @@ namespace MorangosDaCidade2.Controllers
             return produto;
         }    
 
-        public void CadastrarProduto()
+        public async Task CadastrarProdutoAsync()
         {
             Produto produto = FormularioDeProduto();
 
-            if (produtoService.SalvarProduto(produto))
+            if (await produtoService.SalvarProdutoAsync(produto))
             {
                 Console.WriteLine("\nSucesso! Novo produto Cadastrado:");
                 Console.WriteLine($"Nome do Produto: {produto.Nome}");
@@ -90,18 +103,20 @@ namespace MorangosDaCidade2.Controllers
             Console.ReadKey();
         }
 
-        public void ListarProdutos()
+        public async 
+        Task
+ListarProdutosAsync()
         {
             ExibirTituloDaOpcao("LISTA DE PRODUTOS");
-            List<Produto> produtos = produtoService.ListarProdutos();
+            List<Produto> produtos = await produtoService.ListarProdutosAsync();
 
             if (produtos.Count > 0)
             {
-                Console.WriteLine($"{"ID",-5} | {"NOME",-20} | {"QUANTIDADE",10} | {"DISPONÍVEL?",10} | {"VALOR"}");
-                Console.WriteLine(new string('-', 65));
+                Console.WriteLine($"{"ID",-5} | {"NOME",-30} | {"QUANTIDADE",10} | {"DISPONÍVEL?",10} | {"VALOR"}");
+                Console.WriteLine(new string('-', 75));
                 foreach (Produto p in produtos)
                 {
-                    Console.WriteLine($"{p.Id,-5} | {p.Nome.ToUpper(),-20} | {p.Quantidade,10} " +
+                    Console.WriteLine($"{p.Id,-5} | {p.Nome.ToUpper(),-30} | {p.Quantidade,10} " +
                         $"| {(p.Disponivel ? "Sim" : "Não"),10} | {p.Valor:N2} R$");
                 }
             }
@@ -109,13 +124,12 @@ namespace MorangosDaCidade2.Controllers
             {
                 Console.WriteLine("Não Há registros para serem mostrados.");
             }
-            Console.WriteLine("Digite qualquer tecla para continuar...");
-            Console.ReadKey();
+            
         }
 
-        public void ListarProdutosPorNome(string nome)
+        public async Task ListarProdutosPorNomeAsync(string nome)
         {
-            List<Produto> produtos = produtoService.ListarProdutosPorNome(nome);
+            List<Produto> produtos = await produtoService.ListarProdutosPorNomeAsync(nome);
 
             if (produtos.Count > 0)
             {
@@ -131,11 +145,10 @@ namespace MorangosDaCidade2.Controllers
             {
                 Console.WriteLine("Não Há registros para serem mostrados.");
             }
-            Console.WriteLine("Digite qualquer tecla para continuar...");
-            Console.ReadKey();
+            
         }
 
-        public void EditarProduto()
+        public async Task EditarProdutoAsync()
         {
             ExibirTituloDaOpcao("EDITAR PRODUTO");
             Console.WriteLine("Como prefere buscar o Produto desejado?");
@@ -155,24 +168,25 @@ namespace MorangosDaCidade2.Controllers
                 case 1:
                     Console.Write("Digite o nome: ");
                     string nome = Console.ReadLine();
-                    ListarProdutosPorNome(nome);
+                    await ListarProdutosPorNomeAsync(nome);
                     break;
 
                 case 2:
-                    ListarProdutos();
+                    await ListarProdutosAsync();
                     break;
             }
 
             Console.Write("\nDigite o Id do produto: ");
             int id = int.Parse(Console.ReadLine());
-            Produto produto = produtoService.BuscarProdutoPorId(id);
+            Produto produto = await produtoService.BuscarProdutoPorIdAsync(id);
+            Thread.Sleep(2000);
             if (produto != null)
             {
                 
                 produto = FormularioDeProduto();
                 produto.Id = id;
 
-                if (produtoService.AtualizarProduto(produto))
+                if (await produtoService.AtualizarProdutoAsync(produto))
                 {
                     Console.WriteLine("\nSucesso! Novo produto Cadastrado:");
                     Console.WriteLine($"Nome do Produto: {produto.Nome}");
@@ -192,7 +206,7 @@ namespace MorangosDaCidade2.Controllers
             }
         }
 
-        public void DeletarProduto()
+        public async Task DeletarProdutoAsync()
         {
             ExibirTituloDaOpcao("DELETAR PRODUTO");
             Console.WriteLine("Como prefere buscar o Produto desejado?");
@@ -212,26 +226,25 @@ namespace MorangosDaCidade2.Controllers
                 case 1:
                     Console.Write("Digite o nome: ");
                     string nome = Console.ReadLine();
-                    ListarProdutosPorNome(nome);
+                    await ListarProdutosPorNomeAsync(nome);
                     break;
 
                 case 2:
-                    ListarProdutos();
+                    await ListarProdutosAsync();
                     break;
             }
 
             Console.Write("\nDigite o Id do Produto: ");
             int id = int.Parse(Console.ReadLine());
-            Produto produto = produtoService.BuscarProdutoPorId(id);
+            Produto produto = await produtoService.BuscarProdutoPorIdAsync(id);
             if (produto != null)
             {
-                if (produtoService.DeletarProduto(id)) Console.WriteLine("Produto deletado com sucesso!");
+                if (await produtoService.DeletarProdutoAsync(id)) Console.WriteLine("Produto deletado com sucesso!");
                 else
                 {
                     Console.WriteLine("Houve um erro na deleção do funcionário.");
                 }
-                Console.WriteLine("Pressione qualquer tecla para continuar...");
-                Console.ReadKey();
+                
             }
             else
             {

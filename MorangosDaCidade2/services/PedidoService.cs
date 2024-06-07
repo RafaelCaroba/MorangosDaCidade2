@@ -1,6 +1,7 @@
 ﻿using MorangosDaCidade2.Entities;
 using MorangosDaCidade2.repositories;
 using System;
+using System.Threading.Tasks;
 
 namespace MorangosDaCidade2.services
 {
@@ -8,12 +9,15 @@ namespace MorangosDaCidade2.services
     {
         public PedidoRepository pedidoRepository = new PedidoRepository();
 
-        public bool SalvarPedido(Pedido p)
+        public async Task<int> SalvarPedidoAsync(Pedido p)
         {
-            if(pedidoRepository.SalvarPedido(p) > 0) return true;
-            else return false;
+            return await pedidoRepository.SalvarPedidoAsync(p);
         }
 
-
+        public async Task<bool> SalvarItemPedidoAsync(ItemPedido item, int idPedido)
+        {
+            if (await pedidoRepository.SalvarItemPedidoAsync(item, idPedido) > 0) return true;
+            else return false;
+        }
     }
 }

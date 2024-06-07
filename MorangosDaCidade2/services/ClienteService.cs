@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MorangosDaCidade.Entities;
 using MorangosDaCidade.Repository;
 namespace MorangosDaCidade.Service
@@ -9,25 +10,25 @@ namespace MorangosDaCidade.Service
         public ClienteRepository clienteRepository = new ClienteRepository();
         public ClienteService() { }
 
-        public bool SalvarCliente(Cliente f)
+        public async Task<bool> SalvarCliente(Cliente f)
         {
 
-            if (clienteRepository.CadastrarCliente(f) > 0)
+            if (await clienteRepository.CadastrarClienteAsync(f) > 0)
             {
                 return true;
             }
             return false;
         }
 
-        public List<Cliente> ListarClientes()
+        public async Task<List<Cliente>> ListarClientes()
         {
-            List<Cliente> clientes = clienteRepository.ListarClientes();
+            List<Cliente> clientes = await clienteRepository.ListarClientesAsync();
             return clientes;
         }
 
-        public List<Cliente> ListarClientesPorNome(string nome)
+        public async Task<List<Cliente>> ListarClientesPorNome(string nome)
         {
-            List<Cliente> clientes = clienteRepository.BuscarClientePorNome(nome);
+            List<Cliente> clientes = await clienteRepository.BuscarClientePorNomeAsync(nome);
             return clientes;
         }
 

@@ -6,6 +6,7 @@ using MorangosDaCidade.Repository;
 using MorangosDaCidade.Service;
 using MorangosDaCidade2.Controllers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MorangosDaCidade.Controllers
 {
@@ -13,12 +14,12 @@ namespace MorangosDaCidade.Controllers
     {
         public static ClienteService clienteService = new ClienteService();
 
-        public override void Executar()
+        public override async Task ExecutarAsync()
         {
             int opcao = -1;
             while (opcao != 0)
             {
-                base.Executar();
+                base.ExecutarAsync();
                 ExibirTituloDaOpcao("MENU DE CLIENTES");
                 Console.WriteLine("1 - Cadastrar Novo Cliente");
                 Console.WriteLine("2 - Listar Clientes");
@@ -33,19 +34,21 @@ namespace MorangosDaCidade.Controllers
                 {
                     case 1:
                         Console.Clear();
-                        CadastrarCliente();
+                        await CadastrarClienteAsync();
                         break;
                     case 2:
                         Console.Clear();
-                        ListarClientes();
+                        await ListarClientesAsync();
+                        Console.WriteLine("Digite qualquer tecla para continuar...");
+                        Console.ReadKey();
                         break;
                     case 3:
                         Console.Clear();
-                        EditarCliente();
+                        await EditarClienteAsync();
                         break;
                     case 4:
                         Console.Clear();
-                        DeletarCliente();
+                        await DeletarCliente();
                         break;
                     case 0:
                         Console.Clear();
@@ -80,11 +83,11 @@ namespace MorangosDaCidade.Controllers
             Cliente cliente = new Cliente(nome, cpf, email, telefone, dtConvertida, senha1);
             return cliente;
         }
-        public void CadastrarCliente()
+        public async Task CadastrarClienteAsync()
         {
             Cliente cliente = FormularioDeCliente();
 
-            if (clienteService.SalvarCliente(cliente))
+            if (await clienteService.SalvarCliente(cliente))
             {
                 string dataFormat = cliente.DataNascimento.ToString().Replace("00:00:00", "");
                 Console.WriteLine("\nSucesso! Novo cliente Cadastrado:");
@@ -99,10 +102,10 @@ namespace MorangosDaCidade.Controllers
             Console.ReadKey();
         }
 
-        public void ListarClientes()
+        public async Task ListarClientesAsync()
         {
             ExibirTituloDaOpcao("LISTA DE CLIENTES");
-            List<Cliente> clientes = clienteService.ListarClientes();
+            List<Cliente> clientes = await clienteService.ListarClientes();
 
             if (clientes.Count > 0)
             {
@@ -121,13 +124,12 @@ namespace MorangosDaCidade.Controllers
             {
                 Console.WriteLine("Não Há registros para serem mostrados.");
             }
-            Console.WriteLine("Digite qualquer tecla para continuar...");
-            Console.ReadKey();
+            
         }
 
-        public void ListarClientesPorNome(string nome)
+        public async Task ListarClientesPorNomeAsync(string nome)
         {
-            List<Cliente> clientes = clienteService.ListarClientesPorNome(nome);
+            List<Cliente> clientes = await clienteService.ListarClientesPorNome(nome);
 
             if (clientes.Count > 0)
             {
@@ -147,12 +149,11 @@ namespace MorangosDaCidade.Controllers
             {
                 Console.WriteLine("Não Há registros para serem mostrados.");
             }
-            Console.WriteLine("Digite qualquer tecla para continuar...");
-            Console.ReadKey();
+            
         }
 
 
-        public void EditarCliente()
+        public async Task EditarClienteAsync()
         {
             ExibirTituloDaOpcao("EDITAR CLIENTE");
             Console.WriteLine("Como prefere buscar o cliente desejado?");
@@ -172,11 +173,11 @@ namespace MorangosDaCidade.Controllers
                 case 1:
                     Console.Write("Digite o nome: ");
                     string nome = Console.ReadLine();
-                    ListarClientesPorNome(nome);
+                    await ListarClientesPorNomeAsync(nome);
                     break;
 
                 case 2:
-                    ListarClientes();
+                    await ListarClientesAsync();
                     break;
             }
 
@@ -228,7 +229,7 @@ namespace MorangosDaCidade.Controllers
             }
         }
 
-        public void DeletarCliente()
+        public async Task DeletarCliente()
         {
             ExibirTituloDaOpcao("DELETAR USUÁRIO");
             Console.WriteLine("Como prefere buscar o cliente desejado?");
@@ -248,11 +249,11 @@ namespace MorangosDaCidade.Controllers
                 case 1:
                     Console.Write("Digite o nome: ");
                     string nome = Console.ReadLine();
-                    ListarClientesPorNome(nome);
+                    await ListarClientesPorNomeAsync(nome);
                     break;
 
                 case 2:
-                    ListarClientes();
+                    await ListarClientesAsync();
                     break;
             }
 

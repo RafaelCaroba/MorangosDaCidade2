@@ -4,6 +4,7 @@ using MorangosDaCidade2.Entities;
 using MorangosDaCidade2.repositories;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace MorangosDaCidade2.services
@@ -12,39 +13,39 @@ namespace MorangosDaCidade2.services
     {
         public ProdutoRepository produtoRepository = new ProdutoRepository();
 
-        public bool SalvarProduto(Produto produto)
+        public async Task<bool> SalvarProdutoAsync(Produto produto)
         {
-            if (produtoRepository.CadastrarProduto(produto) > 0) return true;
+            if (await produtoRepository.CadastrarProdutoAsync(produto) > 0) return true;
             else return false;
         }
 
-        public List<Produto> ListarProdutos()
+        public async Task<List<Produto>> ListarProdutosAsync()
         {
-            List<Produto> produtos = produtoRepository.ListarFuncionarios();
+            List<Produto> produtos = await produtoRepository.ListarFuncionariosAsync();
             return produtos;
         }
 
-        public List<Produto> ListarProdutosPorNome(string nome)
+        public async Task<List<Produto>> ListarProdutosPorNomeAsync(string nome)
         {
-            List<Produto> produtos = produtoRepository.BuscarProdutoPorNome(nome);
+            List<Produto> produtos = await produtoRepository.BuscarProdutoPorNomeAsync(nome);
             return produtos;
         }
 
-        public Produto BuscarProdutoPorId(int id)
+        public async Task<Produto> BuscarProdutoPorIdAsync(int id)
         {
-            Produto produto = produtoRepository.BuscarProdutoPorId(id);
+            Produto produto = await produtoRepository.BuscarProdutoPorIdAsync(id);
             return produto;
         }
 
-        public bool AtualizarProduto(Produto p)
+        public async Task<bool> AtualizarProdutoAsync(Produto p)
         {
-            if (produtoRepository.AtualizarProduto(p) > 0) return true;
+            if (await produtoRepository.AtualizarProdutoAsync(p) > 0) return true;
             else return false;
         }
 
-        public bool DeletarProduto(int id)
+        public async Task<bool> DeletarProdutoAsync(int id)
         {
-            if (produtoRepository.DeletarProduto(id) > 0) return true;
+            if (await produtoRepository.DeletarProdutoAsync(id) > 0) return true;
             else return false;
         }
     }

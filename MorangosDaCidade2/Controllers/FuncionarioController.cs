@@ -7,6 +7,7 @@ using MorangosDaCidade.Service;
 using MorangosDaCidade2.Controllers;
 using System.Collections.Generic;
 using Microsoft.SqlServer.Server;
+using System.Threading.Tasks;
 
 namespace MorangosDaCidade.Controllers
 {
@@ -14,12 +15,12 @@ namespace MorangosDaCidade.Controllers
     {
         public static FuncionarioService funcionarioService = new FuncionarioService();
 
-        public override void Executar()
+        public override async Task ExecutarAsync()
         {
             int opcao = -1;
             while (opcao != 0)
             {
-                base.Executar();
+                base.ExecutarAsync();
                 ExibirTituloDaOpcao("MENU DE FUNCIONÁRIO");
                 Console.WriteLine("1 - Cadastrar Novo Funcionário");
                 Console.WriteLine("2 - Listar Funcionários");
@@ -39,6 +40,8 @@ namespace MorangosDaCidade.Controllers
                     case 2:
                         Console.Clear();
                         ListarFuncionarios();
+                        Console.WriteLine("Digite qualquer tecla para continuar...");
+                        Console.ReadKey();
                         break;
                     case 3:
                         Console.Clear();
@@ -112,8 +115,7 @@ namespace MorangosDaCidade.Controllers
                 }
             }
             else Console.WriteLine("Não Há registros para serem mostrados.");
-            Console.WriteLine("Digite qualquer tecla para continuar...");
-            Console.ReadKey();
+            
         }
 
         public void ListarFuncionariosPorNome(string nome)

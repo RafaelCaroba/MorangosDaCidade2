@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MorangosDaCidade2.Controllers
 {
@@ -14,9 +15,9 @@ namespace MorangosDaCidade2.Controllers
             Console.WriteLine(asteriscos + "\n");
         }
 
-        public virtual void Executar()
+        public virtual async Task ExecutarAsync()
         {
-            Console.Clear();
+           Console.Clear();
 
         }
 

@@ -14,7 +14,7 @@ namespace MorangosDaCidade.Repository
     class ClienteRepository
     {
         string stringDeConexao = @"Data Source=LAPTOP-V1LI7TEI;Initial Catalog=MorangosDaCidade;Integrated Security=True";
-        public int CadastrarCliente(Cliente f)
+        public async Task<int> CadastrarClienteAsync(Cliente f)
         {
             int resultado = 0;
 
@@ -34,9 +34,9 @@ namespace MorangosDaCidade.Repository
 
                 try
                 {
-                    conexao.Open();
+                    await conexao.OpenAsync();
 
-                    resultado = comando.ExecuteNonQuery();
+                    resultado = (int)await comando.ExecuteNonQueryAsync();
                     Console.WriteLine("Número de linhas afetadas: " + resultado);
                 }
                 catch (SqlException ex) { Console.WriteLine("Erro de SQL: " + ex.Message); }
@@ -52,17 +52,17 @@ namespace MorangosDaCidade.Repository
             return resultado;
         }
 
-        public List<Cliente> ListarClientes()
+        public async Task<List<Cliente>> ListarClientesAsync()
         {
             using (SqlConnection connection = new SqlConnection(stringDeConexao))
             {
                 try
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     string query = "SELECT IdCli, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE";
                     SqlCommand comando = new SqlCommand(query, connection);
                     List<Cliente> clientes = new List<Cliente>();
-                    SqlDataReader reader = comando.ExecuteReader();
+                    SqlDataReader reader = await comando.ExecuteReaderAsync();
                     while (reader.Read())
                     {
                         Cliente f = new Cliente();
@@ -89,23 +89,23 @@ namespace MorangosDaCidade.Repository
             return null;
         }
 
-        public List<Cliente> BuscarClientePorNome(string nome)
+        public async Task<List<Cliente>> BuscarClientePorNomeAsync(string nome)
         {
             using (SqlConnection connection = new SqlConnection(stringDeConexao))
             {
                 try
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     string query = "SELECT IdCli, NOME, CPF, EMAIL, TELEFONE, DataNascimento FROM dbo.CLIENTE" +
                         " WHERE NOME LIKE @Nome";
                     SqlCommand comando = new SqlCommand(query, connection);
                     comando.Parameters.AddWithValue("@Nome", $"%{nome}%");
                     List<Cliente> clientes = new List<Cliente>();
-                    SqlDataReader reader = comando.ExecuteReader();
+                    SqlDataReader reader = await comando.ExecuteReaderAsync();
                     while (reader.Read())
                     {
                         Cliente f = new Cliente();
-                        f.Id = (int)reader["IdFunc"];
+                        f.Id = (int)reader["IdCli"];
                         f.Nome = (string)reader["NOME"];
                         f.Cpf = (string)reader["CPF"];
                         f.Email = (string)reader["EMAIL"];
